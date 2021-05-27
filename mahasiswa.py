@@ -1,18 +1,17 @@
-from database import connection
+from models.studi import Studi
+from models.mahasiswa import Mahasiswa
 
+tableMahasiswa = Mahasiswa()
+tableStudi = Studi()
 
 def getMahasiswa() :
-    cursor = connection.cursor()
-
-    cursor.execute("select*from Mahasiswa")
-
-    for data in cursor :
+    for data in tableMahasiswa.getAll() :
         print(data)
 
     mahasiswaRun = True
 
     while mahasiswaRun == True :
-        print("ketik nim untuk melihat studi")
+        print("ketik 'id mahasiswa' untuk melihat studi mahasiswa")
         print("ketik back untuk kembali ke menu utama")
         pilihan = input()
 
@@ -22,11 +21,10 @@ def getMahasiswa() :
             getStudi(pilihan)
 
 
-def getStudi(nim) :
-    studi = connection.cursor()
+def getStudi(idMahasiswa) :
+    studi = tableStudi.getByMahasiswa(idMahasiswa)
 
-    studi.execute("select*from Studi where mahasiswaId in (select id from Mahasiswa where nim=%s)" % (nim))
-
+    print("Studi Mahasiswa :")
     for data in studi:
         print(data)
 
@@ -35,12 +33,7 @@ def addMahasiswa() :
     nim = input("masukan nim: ")
     nama = input("masukkan nama: ")
 
-    studi = connection.cursor()
-
-    studi.execute(
-        "INSERT INTO Mahasiswa SET nim='%s', nama='%s'" % (nim, nama))
-
-    connection.commit()
+    tableMahasiswa.insert(nim, nama)
 
     print("data mahasiswa tersimpan")
     addMahasiswaRun = True
@@ -55,3 +48,47 @@ def addMahasiswa() :
             addMahasiswaRun = False
 
 
+def editMahasiswa():
+    for data in tableMahasiswa.getAll():
+        print(data)
+
+    id = input("masukan id mahasiswa: ")
+    nim = input("masukan nim: ")
+    nama = input("masukkan nama: ")
+
+    tableMahasiswa.update(id, nim, nama)
+
+    print("data mahasiswa diperbaharui")
+    addMahasiswaRun = True
+
+    while addMahasiswaRun == True:
+        print("edit data lagi? (y/n)")
+        pilihan = input()
+
+        if pilihan == 'y':
+            editMahasiswa()
+            addMahasiswaRun = False
+        else:
+            addMahasiswaRun = False
+
+
+def deleteMahasiswa():
+    for data in tableMahasiswa.getAll():
+        print(data)
+
+    id = input("masukan id mahasiswa yang ingin dihapus: ")
+    
+    tableMahasiswa.delete(id)
+
+    print("data mahasiswa dihapus")
+    addMahasiswaRun = True
+
+    while addMahasiswaRun == True:
+        print("hapus data lagi? (y/n)")
+        pilihan = input()
+
+        if pilihan == 'y':
+            deleteMahasiswa()
+            addMahasiswaRun = False
+        else:
+            addMahasiswaRun = False

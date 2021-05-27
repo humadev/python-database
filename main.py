@@ -1,4 +1,4 @@
-from mahasiswa import addMahasiswa, getMahasiswa
+from mahasiswa import addMahasiswa, deleteMahasiswa, editMahasiswa, getMahasiswa
 
 def display() :
     programRun = True
@@ -9,11 +9,14 @@ def display() :
         print("4. hapus data mahasiswa")
         print("ketik exit untuk menghentikan program")
         pilihan = input()
-
         if pilihan == '1' :
             getMahasiswa()
         if pilihan == '2' :
             addMahasiswa()
+        if pilihan == '3':
+            editMahasiswa()
+        if pilihan == '4':
+            deleteMahasiswa()
         elif pilihan == 'exit' :
             programRun = False
 
